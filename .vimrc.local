@@ -1,0 +1,157 @@
+let mapleader = ";"
+
+"autocmd vimenter * if !argc() | TagbarOpen | endif   
+"当打开vim且没有文件时自动打开NERDTree
+"autocmd vimenter * if !argc() | NERDTree | endif
+
+"filetype on 
+"新建.c,.h,.sh,.java文件，自动插入文件头 
+autocmd BufNewFile *.cpp,*.c,*.h,*.sh,*.rb,*.java,*.py exec ":call SetTitle()" 
+""定义函数SetTitle，自动插入文件头 
+func SetTitle() 
+"如果类型为.sh文件 
+	if &filetype == 'sh' 
+		call setline(1,"#!/bin/bash") 
+		call append(line("."), "") 
+   endif
+    if &filetype == 'python'
+        call setline(1,"#!/usr/bin/env python")
+        call append(line("."), "# -*-coding=utf-8-*-")
+        call append(line(".")+1, "'''")
+        call append(line(".")+2, "  > File Nmae :".expand("%"))
+        call append(line(".")+3, "  > Author    : rack")
+        call append(line(".")+4, "  > Function  :")
+        call append(line(".")+5, "  > Github    : https://github.com/rack-leen")
+		call append(line(".")+6, "	> Date      : ".strftime("%c")) 
+        call append(line(".")+7, "'''")
+	    call append(line(".")+8, "") 
+    endif
+    if &filetype == 'ruby'
+        call setline(1,"#!/usr/bin/env ruby")
+        call append(line("."),"# encoding: utf-8")
+	    call append(line(".")+1, "")
+    endif
+    if &filetype == 'c'
+	    call setline(1, "/*************************************************************************") 
+		call append(line("."), "* > File Name: ".expand("%")) 
+		call append(line(".")+1, "* > Author   : rack") 
+        call append(line(".")+2, "* > Function : ")
+        call append(line(".")+3, "* > Type     :") 
+        call append(line(".")+4, "* > Github   : https://github.com/rack-leen")
+        call append(line(".")+5, "* > Date     : ".strftime("%c")) "
+        call append(line(".")+6, "**************************************************************************/") 
+		call append(line(".")+7, "")
+		call append(line(".")+8, "/*************************************************************************")
+		call append(line(".")+9, "* > 头文件")
+		call append(line(".")+10, "**************************************************************************/")
+		call append(line(".")+11, "")
+    endif
+    if &filetype == 'cpp'
+	    call setline(1, "/*************************************************************************") 
+		call append(line("."), "* > File Name: ".expand("%")) 
+		call append(line(".")+1, "* > Author   : rack") 
+        call append(line(".")+2, "* > Function : ")
+        call append(line(".")+3, "* > Type     :") 
+        call append(line(".")+4, "* > Github   : https://github.com/rack-leen")
+        call append(line(".")+5, "* > Date     : ".strftime("%c")) "
+        call append(line(".")+6, "**************************************************************************/") 
+		call append(line(".")+7, "")
+		call append(line(".")+8, "/*************************************************************************")
+		call append(line(".")+9, "* > 头文件")
+		call append(line(".")+10, "**************************************************************************/")
+		call append(line(".")+11, "")
+    endif
+"        elseif &filetype == 'mkd'
+"        call setline(1,"<head><meta charset=\"UTF-8\"></head>")
+    if &filetype == 'h'
+	    call setline(1, "/*************************************************************************") 
+		call append(line("."), "* > File Name: ".expand("%")) 
+		call append(line(".")+1, "* > Author   : rack") 
+        call append(line(".")+2, "* > Function : ")
+        call append(line(".")+3, "* > Type     :") 
+        call append(line(".")+4, "* > Github   : https://github.com/rack-leen")
+        call append(line(".")+5, "* > Date     : ".strftime("%c")) "
+        call append(line(".")+6, "**************************************************************************/") 
+		call append(line(".")+7, "")
+		call append(line(".")+8, "#ifndef _".toupper(expand("%:r"))."_H")
+		call append(line(".")+9, "#define _".toupper(expand("%:r"))."_H")
+		call append(line(".")+10, "")
+		call append(line(".")+11, "/*************************************************************************")
+		call append(line(".")+12, "* > 头文件")
+		call append(line(".")+13, "**************************************************************************/")
+		call append(line(".")+14, "")
+		call append(line(".")+15, "#endif")
+	endif
+	if &filetype == 'java'
+	    call setline(1, "/*************************************************************************") 
+		call append(line("."), "* > File Name: ".expand("%")) 
+		call append(line(".")+1, "* > Author   : rack") 
+        call append(line(".")+2, "* > Function : ")
+        call append(line(".")+3, "* > Type     :") 
+        call append(line(".")+4, "* > Github   : https://github.com/rack-leen")
+        call append(line(".")+5, "* > Date     : ".strftime("%c")) "
+        call append(line(".")+6, "**************************************************************************/") 
+		call append(line(".")+7, "")
+		call append(line(".")+8,"public class ".expand("%:r"))
+		call append(line(".")+9,"")
+	endif
+"新建文件后，自动定位到文件末尾
+autocmd BufNewFile * normal G
+endfunc 
+
+
+
+" ycm-configuration
+let g:ycm_server_python_interpreter='/usr/bin/python'
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py'
+" YCM 补全菜单配色
+" 菜单
+"highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
+" 选中项
+"highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
+" 补全功能在注释中同样有效
+let g:ycm_complete_in_comments=1
+" 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示
+let g:ycm_confirm_extra_conf=0
+" 开启 YCM 标签补全引擎
+let g:ycm_collect_identifiers_from_tags_files=1
+"OmniCppComplete 基于标签补全
+set tags+=/usr/include/c++/4.8/stdcpp.tags　 "cpp义补全　引入 C++ 标准库tags
+set tags+=/usr/include/sys.tags              "linux系统api 语义补全
+" YCM 集成 OmniCppComplete 补全引擎，设置其快捷键
+inoremap <leader>; <C-x><C-o>
+" 补全内容不以分割子窗口形式出现，只显示补全列表
+set completeopt-=preview
+" 从第一个键入字符就开始罗列匹配项
+let g:ycm_min_num_of_chars_for_completion=1
+" 禁止缓存匹配项，每次都重新生成匹配项
+let g:ycm_cache_omnifunc=0
+" 语法关键字补全
+let g:ycm_seed_identifiers_with_syntax=0
+" 手工补全
+inoremap <leader>; <C-x><C-o>
+
+
+"NERDTree-configuration
+
+"map <C-c>e :NERDTreeToggle 
+"nmap ne :NERDTree<cr>
+" 使用 NERDTree 插件查看工程文件。设置快捷键，速记：file list
+nmap <Leader>nd :NERDTreeToggle<CR>
+" 设置NERDTree子窗口宽度
+let NERDTreeWinSize=25
+" 设置NERDTree子窗口位置
+let NERDTreeWinPos="left"
+" 显示隐藏文件
+let NERDTreeShowHidden=1
+" NERDTree 子窗口中不显示冗余帮助信息
+let NERDTreeMinimalUI=1
+" 删除文件时自动删除文件对应 buffer
+let NERDTreeAutoDeleteBuffer=1
+
+
+" Tagbar-configuration
+nmap <Leader>tg :TagbarToggle<CR>  " 将开启tagbar的快捷键设置为　<Leader>tb
+let g:tagbar_ctags_bin='/usr/bin/ctags'  " 设置ctags所在路径
+let g:tagbar_width = 25
+"autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()　" 在某些情况下自动打开tagbar

@@ -110,6 +110,10 @@ echo "g 安装oh-my-zsh"
 curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 echo "安装结束..."
 
+echo "h 安装spacemacs"
+git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
+echo "安装结束..."
+
 echo "-------------------------------------------------------"
 echo " 2 vim配置"
 echo "-------------------------------------------------------"
@@ -125,6 +129,11 @@ echo "-------------------------------------------------------"
 echo "a 安装vim发行版spf13-vim"
 curl https://j.mp/spf13-vim3 -L > spf13-vim.sh && sh spf13-vim.sh
 echo "个性化配置spf13-vim"
+cp ~/archlinux-comfiguration/.vim.before.local ~/
+cp ~/archlinux-comfiguration/.vim.local ~/
+vim 1 -c "BundleInstall" -c "q"
+rm 1
+echo "安装结束..."
 
 echo "b 安装youcompleteme插件"
 echo "安装youcompleteme"

@@ -1,5 +1,6 @@
 #=======================================================
 # 配置archlinux
+# archlinux-comfiguration需要下载到用户home目录
 #=======================================================
 
 echo "-------------------------------------------------------"
@@ -39,20 +40,28 @@ sudo pacman -y -Syyu  #更新系统
 echo "archlinux源配置结束..."
 
 echo "d 设置字体"
-sudo cp -r ~/archlinux-comfiguration/myfonts  /usr/share/fonts/ 
+sudo cp -r ~/archlinux-comfiguration/myfonts  /usr/share/fonts/
+sudo pacman -y -S adobe-source-code-pro-fonts wqy-bitmapfont wqy-microhei wqy-zenhei
 echo "设置结束..."
 
 echo " e 设置声卡"
 sudo cp -r ~/archlinux-comfiguration/alsamixer/asound.conf /etc/ 
 echo "设置结束..."
 
+echo "urxvt配置"
+touch ~/.Xresources
+echo "xft.dpi:125 #设置dpi，对4k高分屏需要设置，设置成默认值的2倍试试。" >> ~/.Xresources
+echo "URxvt.font: xft:Source Code Pro:antialias=True:pixelsize=18,xft:WenQuanYi Zen Hei:pixelsize=18" >> ~/.Xresources
+echo "URxvt.boldfont: xft:Source Code Pro:antialias=True:pixelsize=18,xft:WenQuanYi Zen Hei:pixelsize=18" >> ~/.Xresources
+echo "urxvt配置结束..."
+
 echo "f 配置中文输入"
-sudo pacman -y -S fcitx fcitx-im libgooglepinyin 
-sed -i "4i #fcitx" ~/.xinitrc 
-sed -i "5i export GTK_IM_MODULE=fcitx" ~/.xinitrc 
-sed -i "6i export QT_IM_MODULE=fcitx" ~/.xinitrc 
-sed -i "7i export XMODIFIERS=@im=fcitx" ~/.xinitrc 
-sed -i "8i fcitx &" ~/.xinitrc 
+sudo pacman -y -S fcitx fcitx-configtool fcitx-googlepinyin fcitx-sogoupinyin
+sed -i "4i #fcitx" ~/.xprofile
+sed -i "5i export GTK_IM_MODULE=fcitx" ~/.xprofile
+sed -i "6i export QT_IM_MODULE=fcitx" ~/.xprofile
+sed -i "7i export XMODIFIERS=@im=fcitx" ~/.xprofile
+sed -i "8i fcitx &" ~/.xprofile
 echo "配置结束..."
 
 echo "-------------------------------------------------------"
@@ -83,22 +92,39 @@ echo "安装结束..."
 
 echo " e 安装flash"
 cp -r ~/archlinux-comfiguration/flash/flash ~/ 
-mkdir -p ~/.mozilla/plugins              
+mkdir -p ~/.mozilla/plugin
 cp -r ~/archlinux-comfiguration/flash/libflashplayer.so 
+echo "安装结束..."
+
+echo "f 安装常用软件"
+sudo pacman -y -S firefox firefox-i18n-zh-cn
+sudo pacman -y -S pycharm
+sudo pacman -y -S google-chrome
+sudo pacman -y -S wps-office
+sudo pacman -y -S libreoffice
+sudo pacman -y -S atom wiznote kodi rhythmbox
+sudo pacman -y -S gedit netease-cloud-music
+echo "安装结束..."
+
+echo "g 安装oh-my-zsh"
+curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 echo "安装结束..."
 
 echo "-------------------------------------------------------"
 echo " 2 vim配置"
 echo "-------------------------------------------------------"
-echo "a 下载vim配置文件"
-cd ~/
-git clone https://github.com/rack-leen/vim.git
-mv vim ~/.vim 
-cp ~/.vim/vimrc ~/.vimrc 
-touch ~/1
-echo "vim安装正在进行，请耐心等候... " > ~/1
-vim 1 -c "PluginInstall" -c "q" 
-rm 1 
+#echo "a 下载vim配置文件"
+#cd ~/
+#git clone https://github.com/rack-leen/vim.git
+#mv vim ~/.vim 
+#cp ~/.vim/vimrc ~/.vimrc 
+#touch ~/1
+#echo "vim安装正在进行，请耐心等候... " > ~/1
+#vim 1 -c "PluginInstall" -c "q" 
+#rm 1 
+echo "a 安装vim发行版spf13-vim"
+curl https://j.mp/spf13-vim3 -L > spf13-vim.sh && sh spf13-vim.sh
+echo "个性化配置spf13-vim"
 
 echo "b 安装youcompleteme插件"
 echo "安装youcompleteme"
@@ -110,7 +136,10 @@ mkdir ~/ycm_build
 cd ./ycm_build
 sudo cmake -G "Unix Mkaefiles" -DEXTERNAL_LIBCLANG_PATH=/usr/lib/libclang.so  ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp 
 sudo cmake --build . --target ycm_core --config Release
-sudo rm -r ~/ycm_build 
+cp ~/archlinux-configuration/.ycm_extra_conf.py ~/.vim
+sudo rm -r ~/ycm_build
 echo "安装完成..."
+
+
 echo "thank you"
 
